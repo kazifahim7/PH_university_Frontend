@@ -1,14 +1,6 @@
+import { TUserPath } from "../types";
 
-type TUserPath={
-    name:string,
-    path?:string,
-    element?:JSX.Element,
-    children?:{
-        name: string,
-        path: string,
-        element: JSX.Element,
-    }[]
-}
+
 
 const routeGenerator = (items: TUserPath[]) => {
      const routes = items.reduce<{ path: string, element: JSX.Element }[]>((acc, item) => {

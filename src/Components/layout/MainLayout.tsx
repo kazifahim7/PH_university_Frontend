@@ -1,8 +1,9 @@
 import { Layout, Menu } from 'antd';
 
 import React, { } from 'react';
-import { items } from '../../Routes/admin.routes';
 import { Outlet } from 'react-router-dom';
+import sidebarGenerator from '../../Utils/sideBarGen';
+import { admin2 } from '../../Routes/admin.routes';
 
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -26,7 +27,7 @@ const MainLayout: React.FC = () => {
                 <div style={{ padding: "0 30%", textAlign: "center", color: "white", fontSize: "30px", textTransform: 'capitalize', fontWeight: 700 }}>
                     <img src="https://i.ibb.co.com/26QqpMt/browsing.png" alt="" style={{ width: "55px", color: "purple" }} />
                 </div>
-                <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} items={items} />
+                <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']} items={sidebarGenerator(admin2,"admin")} />
             </Sider>
             <Layout>
                 <Header style={{ padding: 0, textAlign: "center", color: "white", fontSize: "30px", textTransform: 'capitalize' }} >PH university</Header>
