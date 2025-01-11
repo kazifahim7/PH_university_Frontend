@@ -1,10 +1,14 @@
 import MainLayout from "./Components/layout/MainLayout";
+import ProtectedRoutes from "./Components/layout/ProtectedRoutes";
 
 
 const App = () => {
   return (
     <div>
-      <MainLayout></MainLayout>
+      {/* protect router */}
+     <ProtectedRoutes>
+        <MainLayout></MainLayout>
+      </ProtectedRoutes> 
     </div>
   );
 };
