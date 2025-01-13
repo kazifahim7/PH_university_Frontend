@@ -24,13 +24,13 @@ const Sidebar = () => {
                     <img src="https://i.ibb.co.com/26QqpMt/browsing.png" alt="" style={{ width: "55px", color: "purple" }} />
                 </div>
                 {
-                    role === "admin" && <Menu theme="dark" mode="inline" defaultSelectedKeys={['Dashboard']} items={sidebarGenerator(admin2, "admin")} />
+                    role === "admin" && <Menu theme="dark" mode="inline" defaultSelectedKeys={['dashboard']} items={sidebarGenerator(admin2, "admin")} />
                 }
                 {
-                    role === "faculty" && <Menu theme="dark" mode="inline" defaultSelectedKeys={['Dashboard']} items={sidebarGenerator(facultyPaths, "faculty")} />
+                    role === "faculty" && <Menu theme="dark" mode="inline" defaultSelectedKeys={['dashboard']} items={sidebarGenerator(facultyPaths, "faculty")} />
                 }
                 {
-                    role === "student" && <Menu theme="dark" mode="inline" defaultSelectedKeys={['Dashboard']} items={sidebarGenerator(studentPaths, "student")} />
+                    role === "student" && <Menu theme="dark" mode="inline" defaultSelectedKeys={['dashboard']} items={sidebarGenerator(studentPaths, "student")} />
                 }
 
             </Sider>

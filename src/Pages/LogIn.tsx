@@ -2,9 +2,10 @@ import { Button } from "antd";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useLoginMutation } from "../Redux/Features/auth/authApi";
 import { useAppDispatch } from "../Redux/hook";
-import { setUser } from "../Redux/Features/auth/authSlice";
+import { setUser, TUser } from "../Redux/Features/auth/authSlice";
 import { verifyToken } from "../Utils/verifytoken";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const LogIn = () => {
     const { register, handleSubmit } = useForm();
@@ -16,12 +17,22 @@ const LogIn = () => {
 
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        const res = await login(data).unwrap()
-        const user = verifyToken(res.data.accessToken)
-        dispatch(setUser({ user: { ...user }, token: res.data.accessToken }))
-        if(res){
-            navigate("/")
+     const toastId=   toast.loading("logging...")
+
+        try {
+            
+            const res = await login(data).unwrap()
+            const user = verifyToken(res.data.accessToken) as TUser
+            dispatch(setUser({ user: { ...user }, token: res.data.accessToken }))
+            if (res) {
+                navigate(`/${user.role}/dashboard`)
+            }
+            toast.success('Login successful', { id: toastId })
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+        } catch (error:any) {
+            toast.error("something went wrong", { id: toastId })
         }
+        
     };
 
     return (
@@ -63,6 +74,7 @@ const LogIn = () => {
                         placeholder="Enter your password"
                     />
                 </div>
+               
                 <Button
                     type="primary"
                     htmlType="submit"
@@ -70,6 +82,7 @@ const LogIn = () => {
                 >
                     Log In
                 </Button>
+                
             </form>
         </div>
     );
