@@ -15,7 +15,7 @@ const MainLayout: React.FC = () => {
         toast.success('logOut successfully')
     }
     return (
-        <Layout style={{ height: "100vh" }}>
+        <Layout>
             <Sidebar></Sidebar>
             <Layout>
                 

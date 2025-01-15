@@ -13,14 +13,14 @@ const LogIn = () => {
     const dispatch = useAppDispatch()
 
     const [login] = useLoginMutation()
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-     const toastId=   toast.loading("logging...")
+        const toastId = toast.loading("logging...")
 
         try {
-            
+
             const res = await login(data).unwrap()
             const user = verifyToken(res.data.accessToken) as TUser
             dispatch(setUser({ user: { ...user }, token: res.data.accessToken }))
@@ -28,11 +28,11 @@ const LogIn = () => {
                 navigate(`/${user.role}/dashboard`)
             }
             toast.success('Login successful', { id: toastId })
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-        } catch (error:any) {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+        } catch (error: any) {
             toast.error("something went wrong", { id: toastId })
         }
-        
+
     };
 
     return (
@@ -74,7 +74,7 @@ const LogIn = () => {
                         placeholder="Enter your password"
                     />
                 </div>
-               
+
                 <Button
                     type="primary"
                     htmlType="submit"
@@ -82,7 +82,7 @@ const LogIn = () => {
                 >
                     Log In
                 </Button>
-                
+
             </form>
         </div>
     );
