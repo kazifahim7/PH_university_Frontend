@@ -1,5 +1,5 @@
 
-import { BaseQueryApi, createApi, FetchArgs, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { BaseQueryApi, createApi, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { RootState } from '../store'
 import { logout, setUser } from '../Features/auth/authSlice'
 import { toast } from 'sonner'
@@ -24,7 +24,9 @@ const baseQueryWithRefreshToken = async (args: string | FetchArgs, api: BaseQuer
     let result = await baseQuery(args, api, extraOption)
 
     if(result?.error?.status===404){
-        toast.error("User not Found")
+        const error=result.error as FetchBaseQueryError
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        toast.error((error.data as any).message)
     }
 
     if (result?.error?.status === 401) {

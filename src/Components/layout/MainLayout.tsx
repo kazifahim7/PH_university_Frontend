@@ -25,10 +25,10 @@ const MainLayout: React.FC = () => {
                     
                 </Header>
                 
-                <Content style={{ margin: '24px 16px 0' }}>
+                <Content style={{ margin: '' }}>
                     <div
                         style={{
-                            padding: 24,
+                            padding: 0,
                             // Optional: for better contrast
                         }}
                     >

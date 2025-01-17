@@ -1,20 +1,93 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { useCreateAcademicSemesterMutation } from "../../../Redux/Features/Admin/academicManagement";
+import { toast } from "sonner";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 const CreateAcademicSemester = () => {
+    const academicSemesterSchema = z.object({
+        name: z.string({ required_error: "Name is Required" }),
+        year: z.string({ required_error: "Name is Required" }),
+        code: z.enum(["01", "02", "03"], { required_error: "code is required" }),
+        startMonth: z.enum([
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ], { required_error: "start Month is required" }),
+        endMonth: z.enum([
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December",
+        ], { required_error: "End Month is required" })
+    })
+
+
+
+
+
     const {
         register,
         handleSubmit,
+        reset,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        resolver: zodResolver(academicSemesterSchema)
+    });
 
-    const onSubmit: SubmitHandler<FieldValues> = (data) => {
-        console.log(data);
+    const [CreateAcademicSemester] = useCreateAcademicSemesterMutation()
+
+    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+        const id = toast.loading(" Creating...")
+
+
+        const result = await CreateAcademicSemester(data)
+        if (result.data) {
+
+            toast.success(`${result?.data.message}`, { id: id })
+            reset({
+                name: "",
+                year: "",
+                code: "",
+                startMonth: "",
+                endMonth: "",
+            })
+
+        }
+        else if (result.error) {
+            console.log(result.error)
+            const error = result.error as FetchBaseQueryError
+            if (error.data) {
+
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                toast.error(`${(error.data as any).message}`, { id: id })
+            }
+        }
+
     };
 
     return (
-        <div  className=" bg-[url('https://i.postimg.cc/FFYpwr7D/top-view-school-supplies-with-microscope.jpg')] bg-cover bg-center min-h-screen">
-            <div className="flex items-center justify-center min-h-screen bg-gray-100">
-                <div className="bg-white rounded-lg shadow-lg p-8 max-w-lg w-full">
+        <div className="">
+            <div className="flex items-center justify-center min-h-screen  bg-[url('https://i.postimg.cc/FFYpwr7D/top-view-school-supplies-with-microscope.jpg')] bg-cover ">
+                <div className="bg-gray-100 bg-opacity-95 rounded-lg shadow-lg p-8 max-w-lg w-full">
                     <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">
                         Create Academic Semester
                     </h2>
@@ -32,7 +105,7 @@ const CreateAcademicSemester = () => {
                                 <option value="" disabled selected>
                                     Select a name
                                 </option>
-                                {["Summer", "Autumn", "Fall"].map((name) => (
+                                {["Autumn", "Summer", "Fall"].map((name) => (
                                     <option key={name} value={name}>
                                         {name}
                                     </option>
@@ -48,19 +121,22 @@ const CreateAcademicSemester = () => {
                             <label htmlFor="year" className="block text-sm font-medium text-gray-700">
                                 Year
                             </label>
-                            <input
-                                type="number"
+                            <select
                                 id="year"
-                                {...register("year", {
-                                    required: "Year is required",
-                                    min: { value: 2000, message: "Year must be 2000 or later" },
-                                    max: { value: 2100, message: "Year must be 2100 or earlier" },
-                                })}
-                                placeholder="Enter year"
+                                {...register("year", { required: "year is required" })}
                                 className="mt-1 w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            />
+                            >
+                                <option value="" disabled selected>
+                                    Select a year
+                                </option>
+                                {[Number(new Date().getFullYear()).toString(), (Number(new Date().getFullYear()) + 1).toString(), (Number(new Date().getFullYear()) + 2).toString(), (Number(new Date().getFullYear()) + 3).toString()].map((name) => (
+                                    <option key={name} value={name}>
+                                        {name}
+                                    </option>
+                                ))}
+                            </select>
                             {errors.year?.message && (
-                                <span className="text-red-600">{errors.year.message.toString()}</span>
+                                <span className="text-red-600">{errors?.year?.message.toString()}</span>
                             )}
                         </div>
 
@@ -174,7 +250,7 @@ const CreateAcademicSemester = () => {
                     </form>
                 </div>
             </div>
-       </div>
+        </div>
     );
 };
 
