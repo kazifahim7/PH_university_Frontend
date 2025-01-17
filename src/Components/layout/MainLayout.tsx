@@ -21,11 +21,11 @@ const MainLayout: React.FC = () => {
                 
                 <Header style={{ padding: 0, textAlign: "center", color: "white", fontSize: "30px", textTransform: 'capitalize' }} >PH university
                     
-                    <Button onClick={handleLogout} style={{marginLeft:'70%'}}>logOut</Button>
+                    <Button onClick={handleLogout} style={{marginLeft:'80%'}}>logOut</Button>
                     
                 </Header>
                 
-                <Content style={{ margin: '' }}>
+                <Content style={{ margin: '70px 70px' }}>
                     <div
                         style={{
                             padding: 0,

@@ -73,7 +73,7 @@ const CreateAcademicSemester = () => {
 
         }
         else if (result.error) {
-            console.log(result.error)
+          
             const error = result.error as FetchBaseQueryError
             if (error.data) {
 

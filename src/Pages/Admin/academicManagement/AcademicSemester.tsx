@@ -1,4 +1,4 @@
-import { Table, TableColumnsType, TableProps } from "antd";
+import { Button, Table, TableColumnsType, TableProps } from "antd";
 import { useGetAllSemestersQuery } from "../../../Redux/Features/Admin/academicManagement";
 import { Key, useState } from "react";
 
@@ -74,6 +74,17 @@ const AcademicSemester = () => {
             title: 'endMonth',
             dataIndex: 'endMonth',
         },
+        {
+            title: 'Action',
+            key:"x",
+            render:()=>{
+                return (
+                    <div>
+                        <Button>Update</Button>
+                    </div>
+                )
+            }
+        },
 
     ];
 
@@ -103,6 +114,7 @@ const AcademicSemester = () => {
             loading={isFetching}
             dataSource={tableData}
             onChange={onChange}
+            scroll={{ x: 'max-content' }}
             showSorterTooltip={{ target: 'sorter-icon' }}
         />
     );
