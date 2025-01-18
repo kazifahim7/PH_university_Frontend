@@ -3,7 +3,7 @@
 const AcademicDepartment = () => {
     return (
         <div>
-            
+            coming soon........
         </div>
     );
 };
