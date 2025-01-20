@@ -60,5 +60,6 @@ const baseQueryWithRefreshToken = async (args: string | FetchArgs, api: BaseQuer
 export const baseApi = createApi({
     reducerPath: "baseApi",
     baseQuery: baseQueryWithRefreshToken,
+    tagTypes:["semester","student"],
     endpoints: () => ({})
 })

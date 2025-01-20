@@ -1,4 +1,5 @@
 import { baseApi } from "../../api/baseApi";
+import { TResponse } from "./academicManagement";
 
 const userManagementApi = baseApi.injectEndpoints({
     endpoints:(builder)=>({
@@ -7,11 +8,61 @@ const userManagementApi = baseApi.injectEndpoints({
                 url:"/users/create-student",
                 method:"POST",
                 body:data
-            })
-        })
+            }),
+            invalidatesTags:["student"]
+        }),
+        getAllStudent: builder.query({
+            query: (args) => {
+                const params = new URLSearchParams();
+                if (args) {
+                    args.forEach((arg: { name: string; value: string; }) => params.append(arg.name, arg.value))
+                }
+                return {
+                    url: '/students',
+                    method: "GET",
+                    params: params
+                }
+            },
+
+            providesTags:["student"],
+
+            transformResponse: (response: TResponse) => {
+
+                return {
+                    data: response.data,
+                    meta: response.meta
+                }
+            },
+            
+            
+        }),
+        getSingleStudent:builder.query({
+            query: (id: string |undefined) =>{
+                return {
+                    url: `/students/${id}`,
+                    method:"GET"
+                }
+            },
+           
+            
+        }),
+
+        updateStudent: builder.mutation({
+            query: ({data,id}) => {
+                console.log("form redux", data, id)
+              return {
+                  url: `/students/${id}`,
+                  method: "PATCH",
+                  body: data
+              }
+            },
+            invalidatesTags: ["student"]
+           
+        }),
+       
 
     })
 })
 
 
-export const {useCreateStudentMutation}=userManagementApi
+export const {useCreateStudentMutation,useGetAllStudentQuery,useGetSingleStudentQuery,useUpdateStudentMutation}=userManagementApi

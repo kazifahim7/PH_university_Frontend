@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "../../api/baseApi";
 
-type TResponse = {
+export type TResponse = {
 
 
     data?: any,
