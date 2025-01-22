@@ -3,6 +3,11 @@ import { useForm, Controller, SubmitHandler, FieldValues, useWatch } from "react
 import { Select, TimePicker } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import moment from "moment";
+import { useGetAllCoursesQuery, useGetAllSemesterRegisteredDataQuery, useOfferCourseMutation } from "../../../Redux/Features/Admin/courseManagementApi";
+import { useGetAllAcademicDepartMentQuery, useGetAllAcademicFacultyQuery} from "../../../Redux/Features/Admin/academicManagement";
+import {  useGetCourseFacultiesQuery } from "../../../Redux/Features/Admin/usermanageManagementApi";
+import { toast } from "sonner";
 
 
 const OfferCourse = () => {
@@ -25,8 +30,80 @@ const OfferCourse = () => {
     },[inputValue])
     
 
-    const onSubmit: SubmitHandler<FieldValues> = (data) => {
-        console.log(data);
+    const [addOfferedCourse] = useOfferCourseMutation();
+
+    const { data: semesterRegistrationData } = useGetAllSemesterRegisteredDataQuery([
+        { name: 'status', value: 'UPCOMING' },
+        { name: 'sort', value: 'year' },
+    ]);
+
+    console.log(semesterRegistrationData)
+
+    const { data: academicFacultyData } = useGetAllAcademicFacultyQuery(undefined);
+
+    const { data: academicDepartmentData } =
+        useGetAllAcademicDepartMentQuery(undefined);
+
+    const { data: coursesData } = useGetAllCoursesQuery(undefined);
+
+    const { data: facultiesData} =
+        useGetCourseFacultiesQuery(id, { skip: !id });
+
+    const semesterRegistrationOptions = semesterRegistrationData?.data?.map(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (item:any) => ({
+            value: item._id,
+            label: `${item?.academicSemester?.name} ${item.academicSemester.year}`,
+        })
+    );
+
+    
+
+    const academicFacultyOptions = academicFacultyData?.data?.map((item: { _id: string, name: string }) => ({
+        value: item._id,
+        label: item.name,
+    }));
+
+    const academicDepartmentOptions = academicDepartmentData?.data?.map(
+        (item: { _id: string, name: string }) => ({
+            value: item._id,
+            label: item.name,
+        })
+    );
+
+    const courseOptions = coursesData?.data?.map((item: { _id: string, title: string }) => ({
+        value: item._id,
+        label: item.title,
+    }));
+
+    const facultiesOptions = facultiesData?.data?.faculties?.map((item:{_id:string,fullName:string}) => ({
+        value: item._id,
+        label: item.fullName,
+    }));
+
+    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+        const offeredCourseData = {
+            ...data,
+            maxCapacity: Number(data.maxCapacity),
+            section: Number(data.section),
+            startTime: moment(new Date(data.startTime)).format('HH:mm'),
+            endTime: moment(new Date(data.endTime)).format('HH:mm'),
+        };
+
+        const toastId=toast.loading("creating...")
+        try {
+            const res = await addOfferedCourse(offeredCourseData);
+            if(res.data){
+                toast.success("offer course crated successfully",{id:toastId})
+            
+            }
+           if(res.error){
+            toast.error(res.error.data.message)
+           }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error:any) {
+            toast.error(error.data.message,{id:toastId})
+        }
     };
 
     return (
@@ -46,9 +123,7 @@ const OfferCourse = () => {
                                 {...field}
                                 placeholder="Select semester registration"
                                 className="w-full"
-                                options={[
-                                    { value: "65b6185f13c0a33cdf61589a", label: "Semester 1" },
-                                ]}
+                                options={semesterRegistrationOptions}
                             />
                         )}
                     />
@@ -72,9 +147,7 @@ const OfferCourse = () => {
                                 {...field}
                                 placeholder="Select academic faculty"
                                 className="w-full"
-                                options={[
-                                    { value: "65b00f3510b74fcbd7a25d86", label: "Faculty A" },
-                                ]}
+                                options={academicFacultyOptions}
                             />
                         )}
                     />
@@ -98,9 +171,7 @@ const OfferCourse = () => {
                                 {...field}
                                 placeholder="Select academic department"
                                 className="w-full"
-                                options={[
-                                    { value: "65b00fb010b74fcbd7a25d8e", label: "Department A" },
-                                ]}
+                                options={academicDepartmentOptions}
                             />
                         )}
                     />
@@ -124,7 +195,7 @@ const OfferCourse = () => {
                                 {...field}
                                 placeholder="Select course"
                                 className="w-full"
-                                options={[{ value: "65b6001fd6ffdd9bfc058329", label: "Course A" }]}
+                                options={courseOptions}
                             />
                         )}
                     />
@@ -149,7 +220,7 @@ const OfferCourse = () => {
                                 placeholder="Select faculty"
                                 className="w-full"
                                 disabled={!id}
-                                options={[{ value: "65b0844ccb87974826d0b7af", label: "Faculty A" }]}
+                                options={facultiesOptions}
                             />
                         )}
                     />

@@ -84,10 +84,25 @@ const userManagementApi = baseApi.injectEndpoints({
             invalidatesTags: ["student"]
            
         }),
+
+        getCourseFaculties: builder.query({
+            query: (id) => {
+                return {
+                    url: `/courses/${id}/get-faculties`,
+                    method: 'GET',
+                };
+            },
+            transformResponse: (response: TResponse) => {
+                return {
+                    data: response.data,
+                    meta: response.meta,
+                };
+            },
+        }),
        
 
     })
 })
 
 
-export const {useCreateStudentMutation,useGetAllStudentQuery,useGetSingleStudentQuery,useUpdateStudentMutation,useGetAllFacultyQuery}=userManagementApi
+export const {useCreateStudentMutation,useGetAllStudentQuery,useGetSingleStudentQuery,useUpdateStudentMutation,useGetAllFacultyQuery,useGetCourseFacultiesQuery}=userManagementApi
